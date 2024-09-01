@@ -262,7 +262,7 @@ FocusScope {
         id: bottomBar
         color: "white"
         anchors.top: conteiner.bottom
-        height: parent.height * 0.07
+        height: parent.height * 0.08
         width: parent.width
         property var selectedGame: null
         Row {
