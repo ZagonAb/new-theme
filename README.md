@@ -1,4 +1,4 @@
-# PlayHub-Theme
+# PlayHub Theme
 # El tema es funcional, pero aún no he terminado con él...
 # Es un tema sencillo, sin muchos efectos visuales, sin cargar demasiado la interfaz con muchos elementos visuales del juego, solo utiliza el boxFront. 
 # DEMO VIDEO
