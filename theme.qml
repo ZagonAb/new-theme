@@ -14,6 +14,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
@@ -36,22 +37,78 @@ FocusScope {
         volume: 2.5
     }
 
+    Item {
+        id: collectionsItem
+        property alias favoritesModel: favoritesProxyModel
+        property alias historyModel: continuePlayingProxyModel
+
+        ListModel {
+            id: collectionsModel
+            property int favoritesIndex: -1
+            property int historyIndex : - 1
+            Component.onCompleted: {
+                var favoritecollection = { name: "Favorite", shortName: "favorite", games: favoritesProxyModel };
+                collectionsModel.append(favoritecollection);
+                collectionsModel.favoritesIndex = collectionsModel.count - 1;
+
+                var historycollection = { name: "History", shortName: "history", games: continuePlayingProxyModel };
+                collectionsModel.append(historycollection);
+                collectionsModel.historyIndex = collectionsModel.count - 1;
+
+                for (var i = 0; i < api.collections.count; ++i) {
+                    var collection = api.collections.get(i);
+                        collectionsModel.append(collection);
+                }
+            }
+        }
+
+        SortFilterProxyModel {
+            id: favoritesProxyModel
+            sourceModel: api.allGames
+            filters: ValueFilter { roleName: "favorite"; value: true }
+        }
+
+        SortFilterProxyModel {
+            id: historyProxyModel
+            sourceModel: api.allGames
+            sorters: RoleSorter { roleName: "lastPlayed"; sortOrder: Qt.DescendingOrder }
+        }
+
+        ListModel {
+            id: continuePlayingProxyModel
+            Component.onCompleted: {
+                var currentDate = new Date()
+                var sevenDaysAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000)
+                for (var i = 0; i < historyProxyModel.count; ++i) {
+                    var game = historyProxyModel.get(i)
+                    var lastPlayedDate = new Date(game.lastPlayed)
+                    var playTimeInMinutes = game.playTime / 60
+                    if (lastPlayedDate >= sevenDaysAgo && playTimeInMinutes > 1) {
+                        continuePlayingProxyModel.append(game)
+                    }
+                }
+            }
+        }
+    }
+
     Rectangle {
         id: conteiner
         width: parent.width
         height: parent.height * 0.92
         color: "#f5f5f5"
+
         ListView {
             id: collectionListView
             width: parent.width * 0.98
             height: 60
-            model: api.collections
+            model: collectionsModel
             orientation: Qt.Horizontal
             spacing: 5
             clip: true
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 10
+            property string currentShortName: ""
             property int indexToPosition: -1
 
             delegate: Rectangle {
@@ -64,7 +121,7 @@ FocusScope {
 
                 Text {
                     anchors.centerIn: parent
-                    text: modelData.shortName.toUpperCase()
+                    text: model.shortName.toUpperCase()
                     color: index === collectionListView.currentIndex && collectionListView.focus ? "white" : "black"
                     font.bold: true
                                         
@@ -79,15 +136,17 @@ FocusScope {
                 }
             }
 
-            onCurrentIndexChanged: {
-                gameGridView.model = api.collections.get(currentIndex).games;
-                indexToPosition = currentIndex
-            }
-
             onIndexToPositionChanged: {
                 if (indexToPosition >= 0) {
                     positionViewAtIndex(indexToPosition, ListView.Center)
                 }
+            }
+
+            onCurrentIndexChanged: {
+                const selectedCollection = collectionsModel.get(currentIndex)
+                gameGridView.model = collectionsModel.get(currentIndex).games;
+                currentShortName = selectedCollection.shortName
+                indexToPosition = currentIndex
             }
 
             focus: true
@@ -233,6 +292,16 @@ FocusScope {
                 }
             }
 
+            Text {
+                id: noGamesText
+                anchors.centerIn: parent
+                visible: gameGridView.count === 0
+                text: "No " + collectionListView.currentShortName + " Available"
+                font.pixelSize: 20
+                color: "black"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
             focus: true
 
             SoundEffect {
@@ -245,19 +314,22 @@ FocusScope {
                 if (!event.isAutoRepeat && (event.key === Qt.Key_Left || event.key === Qt.Key_Right || event.key === Qt.Key_Up || event.key === Qt.Key_Down)) {
                     gameSound.play();
                 }
-
                 if (!event.isAutoRepeat && api.keys.isAccept(event)) {
                     event.accepted = true;
-                    var currentGame = gameGridView.model.get(gameGridView.currentIndex);
-                    if (currentGame && currentGame.launch) {
-                        currentGame.launch();
+                    var selectedGame = gameGridView.model.get(gameGridView.currentIndex);
+                    var selectedTitle = selectedGame.title;
+                    var gamesArray = api.allGames.toVarArray();
+                    var gameFound = gamesArray.find(function(game) {
+                        return game.title === selectedTitle;
+                    });
+                    if (gameFound) {
+                        gameFound.launch();
                     }
                 } else if (!event.isAutoRepeat && api.keys.isCancel(event)) {
                     event.accepted = true;
                     naviSound.play();
                     collectionListView.focus = true;
                 }
-
                 if (api.keys.isNextPage(event)) {
                     naviSound.play();
                     collectionListView.incrementCurrentIndex();
@@ -267,12 +339,17 @@ FocusScope {
                     collectionListView.decrementCurrentIndex();
                     collectionListView.focus = true;
                 } else if (api.keys.isDetails(event)) {
-                    favSound.play();
                     event.accepted = true;
+                    favSound.play()
                     var selectedGame = gameGridView.model.get(gameGridView.currentIndex);
-                    if (selectedGame) {
-                        selectedGame.favorite = !selectedGame.favorite;
-                        gameGridView.model.set(gameGridView.currentIndex, selectedGame);
+                    var selectedTitle = selectedGame.title;
+                    var gamesArray = api.allGames.toVarArray();
+                    var gameFound = gamesArray.find(function(game) {
+                        return game.title === selectedTitle;
+                    });
+                    if (gameFound) {
+                        gameFound.favorite = !gameFound.favorite;
+                    } else {
                     }
                 }
             }
