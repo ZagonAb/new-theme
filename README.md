@@ -11,7 +11,7 @@
 # Screenshots
 
 ![screenshots0](https://github.com/user-attachments/assets/593f5508-3228-4a55-85cf-dbdedf67df0a)
-![screenshots1](https://github.com/user-attachments/assets/55ef2177-3ea4-47a1-af61-69072bacad90)
+![screenshots1](https://github.com/user-attachments/assets/38a2cba1-7659-4f0c-b2ec-62a327674927)
 ![screenshots2](https://github.com/user-attachments/assets/0aee221c-3cf4-47bd-bb2d-bd417de0681a)
 
 # Licencia
