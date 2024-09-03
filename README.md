@@ -10,7 +10,7 @@
 ![DEMO](https://github.com/user-attachments/assets/17f339a9-8b3a-4fd7-92b9-dc276fc2fff4)
 # Screenshots
 
-![screenshots0](https://github.com/user-attachments/assets/4227cedf-6767-472f-9c1f-69ca99bb43d0)
+![screenshots0](https://github.com/user-attachments/assets/593f5508-3228-4a55-85cf-dbdedf67df0a)
 ![screenshots1](https://github.com/user-attachments/assets/55ef2177-3ea4-47a1-af61-69072bacad90)
 ![screenshots2](https://github.com/user-attachments/assets/0aee221c-3cf4-47bd-bb2d-bd417de0681a)
 
