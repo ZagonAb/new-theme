@@ -125,7 +125,7 @@ FocusScope {
                     color: index === collectionListView.currentIndex && collectionListView.focus ? "white" : "black"
                     font.bold: true
                                         
-                    font.pixelSize: index === collectionListView.currentIndex && collectionListView.focus ? 16 : 14
+                    font.pixelSize: index === collectionListView.currentIndex && collectionListView.focus ? 17 : 14
 
                     Behavior on font.pixelSize {
                         NumberAnimation {
@@ -379,13 +379,14 @@ FocusScope {
             spacing: 20
 
             Row {
-                spacing: 5 
+                spacing: 5
+                visible: !collectionListView.activeFocus
                 Image {
                     source: "assets/control/favorite.png"
                     width: 36
                     height:36 
                     anchors.verticalCenter: parent.verticalCenter
-                    sourceSize { width: 64; height: 64 }
+                    mipmap: true
                 }
 
                 Text {
@@ -398,32 +399,14 @@ FocusScope {
             }
 
             Row {
-                spacing: 5 
-                Image {
-                    source: "assets/control/back.png"
-                    width: 36
-                    height: 36
-                    anchors.verticalCenter: parent.verticalCenter
-                    sourceSize { width: 64; height: 64 }
-                }
-
-                Text {
-                    text: " BACK"
-                    color: "black"
-                    font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Row {
                 spacing: 5
+                visible: !collectionListView.activeFocus
                 Image {
                     source: "assets/control/ok.png"
                     width: 36
                     height: 36
                     anchors.verticalCenter: parent.verticalCenter
-                    sourceSize { width: 64; height: 64 }
+                    mipmap: true
                 }
 
                 Text {
@@ -439,6 +422,91 @@ FocusScope {
                     height: 1
                     color: "transparent"
                 }
+            }
+
+            Row {
+                spacing: 5
+                visible: collectionListView.activeFocus
+                Image {
+                    source: "assets/control/down.png"
+                    width: 36
+                    height:36 
+                    anchors.verticalCenter: parent.verticalCenter
+                    mipmap: true
+                }
+
+                Text {
+                    text: " GAMES"
+                    color: "black"
+                    font.bold: true
+                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            Row {
+                spacing: 5
+                visible: collectionListView.activeFocus
+                Image {
+                    source: "assets/control/prev.png"
+                    width: 36
+                    height:36 
+                    anchors.verticalCenter: parent.verticalCenter
+                    mipmap: true
+                }
+
+                Text {
+                    text: "PREV COLLECTION"
+                    color: "black"
+                    font.bold: true
+                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            Row {
+                spacing: 5
+                visible: collectionListView.activeFocus
+                Image {
+                    source: "assets/control/next.png"
+                    width: 36
+                    height:36 
+                    anchors.verticalCenter: parent.verticalCenter
+                    mipmap: true
+                }
+
+                Text {
+                    text: "NEXT COLLECTION"
+                    color: "black"
+                    font.bold: true
+                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            Row {
+                spacing: 5 
+                Image {
+                    source: "assets/control/back.png"
+                    width: 36
+                    height: 36
+                    anchors.verticalCenter: parent.verticalCenter
+                    mipmap: true
+                }
+
+                Text {
+                    text: " BACK"
+                    color: "black"
+                    font.bold: true
+                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+
+            Rectangle {
+                width: 5 
+                height: 1
+                color: "transparent"
             }
         }
         
