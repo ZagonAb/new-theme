@@ -1,4 +1,4 @@
-// Pegasus Frontend - still none
+// Pegasus Frontend - PlayHub
 // Author: Gonzalo Abbate 
 // GNU/LINUX - WINDOWS
 //
@@ -14,7 +14,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.12
@@ -50,11 +49,9 @@ FocusScope {
                 var favoritecollection = { name: "Favorite", shortName: "favorite", games: favoritesProxyModel };
                 collectionsModel.append(favoritecollection);
                 collectionsModel.favoritesIndex = collectionsModel.count - 1;
-
                 var historycollection = { name: "History", shortName: "history", games: continuePlayingProxyModel };
                 collectionsModel.append(historycollection);
                 collectionsModel.historyIndex = collectionsModel.count - 1;
-
                 for (var i = 0; i < api.collections.count; ++i) {
                     var collection = api.collections.get(i);
                         collectionsModel.append(collection);
@@ -118,15 +115,12 @@ FocusScope {
                 border.color: "black"
                 border.width: 4
                 radius: 10
-
                 Text {
                     anchors.centerIn: parent
                     text: model.shortName.toUpperCase()
                     color: index === collectionListView.currentIndex && collectionListView.focus ? "white" : "black"
-                    font.bold: true
-                                        
+                    font.bold: true              
                     font.pixelSize: index === collectionListView.currentIndex && collectionListView.focus ? 17 : 14
-
                     Behavior on font.pixelSize {
                         NumberAnimation {
                             duration: 100
@@ -208,6 +202,7 @@ FocusScope {
 
             delegate: Rectangle {
                 property bool isSelected: GridView.isCurrentItem
+
                 width: gameGridView.cellWidth
                 height: gameGridView.cellHeight
                 radius: 20
@@ -217,6 +212,7 @@ FocusScope {
                 Item {
                     width: parent.width
                     height: parent.height
+
 
                     Column {
                         anchors.fill: parent
@@ -228,6 +224,7 @@ FocusScope {
                             height: parent.height - 40
                             color: "transparent"
                             clip: true
+
                             
                             Item{
 
@@ -314,22 +311,30 @@ FocusScope {
                 if (!event.isAutoRepeat && (event.key === Qt.Key_Left || event.key === Qt.Key_Right || event.key === Qt.Key_Up || event.key === Qt.Key_Down)) {
                     gameSound.play();
                 }
+
                 if (!event.isAutoRepeat && api.keys.isAccept(event)) {
                     event.accepted = true;
                     var selectedGame = gameGridView.model.get(gameGridView.currentIndex);
-                    var selectedTitle = selectedGame.title;
-                    var gamesArray = api.allGames.toVarArray();
-                    var gameFound = gamesArray.find(function(game) {
-                        return game.title === selectedTitle;
-                    });
-                    if (gameFound) {
-                        gameFound.launch();
+                    var collectionName = getNameCollecForGame(selectedGame);
+                    for (var i = 0; i < api.collections.count; ++i) {
+                        var collection = api.collections.get(i);
+                        if (collection.name === collectionName) {
+                            for (var j = 0; j < collection.games.count; ++j) {
+                                var game = collection.games.get(j);
+                                if (game.title === selectedGame.title) {
+                                    game.launch();
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                     }
                 } else if (!event.isAutoRepeat && api.keys.isCancel(event)) {
                     event.accepted = true;
                     naviSound.play();
                     collectionListView.focus = true;
                 }
+
                 if (api.keys.isNextPage(event)) {
                     naviSound.play();
                     collectionListView.incrementCurrentIndex();
@@ -338,18 +343,26 @@ FocusScope {
                     naviSound.play();
                     collectionListView.decrementCurrentIndex();
                     collectionListView.focus = true;
-                } else if (api.keys.isDetails(event)) {
+                }
+
+                else if (!event.isAutoRepeat && api.keys.isDetails(event)) {
                     event.accepted = true;
-                    favSound.play()
+                    favSound.play();
                     var selectedGame = gameGridView.model.get(gameGridView.currentIndex);
-                    var selectedTitle = selectedGame.title;
-                    var gamesArray = api.allGames.toVarArray();
-                    var gameFound = gamesArray.find(function(game) {
-                        return game.title === selectedTitle;
-                    });
-                    if (gameFound) {
-                        gameFound.favorite = !gameFound.favorite;
-                    } else {
+                    var collectionName = getNameCollecForGame(selectedGame);
+                    for (var i = 0; i < api.collections.count; ++i) {
+                        var collection = api.collections.get(i);
+                        if (collection.name === collectionName) {
+                            for (var j = 0; j < collection.games.count; ++j) {
+                                var game = collection.games.get(j);
+                                if (game.title === selectedGame.title) {
+                                    game.favorite = !game.favorite;
+                                    updateContinuePlayingModel();
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -592,6 +605,36 @@ FocusScope {
         } else {
             playTimeText.text = "| Play Time: 00:00:00";
             lastPlayedText.text = "| Last Played: N/A";
+        }
+    }
+    
+    function getNameCollecForGame(game) {
+        if (game && game.collections && game.collections.count > 0) {
+            var firstCollection = game.collections.get(0);
+            for (var i = 0; i < api.collections.count; ++i) {
+                var collection = api.collections.get(i);
+                if (collection.name === firstCollection.name) {
+                    return collection.name;
+                }
+            }
+        }
+        return "default";
+    }
+
+    function updateContinuePlayingModel() {
+        continuePlayingProxyModel.clear();
+
+        var currentDate = new Date();
+        var sevenDaysAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        for (var i = 0; i < historyProxyModel.count; ++i) {
+            var game = historyProxyModel.get(i);
+            var lastPlayedDate = new Date(game.lastPlayed);
+            var playTimeInMinutes = game.playTime / 60;
+
+            if (lastPlayedDate >= sevenDaysAgo && playTimeInMinutes > 1) {
+                continuePlayingProxyModel.append(game);
+            }
         }
     }
 }
