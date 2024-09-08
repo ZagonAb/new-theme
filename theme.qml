@@ -406,7 +406,7 @@ FocusScope {
                     text: " FAVORITE"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -426,7 +426,7 @@ FocusScope {
                     text: " LAUNCH"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.rightMargin: 100
                 }
@@ -452,7 +452,7 @@ FocusScope {
                     text: " GAMES"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -472,7 +472,7 @@ FocusScope {
                     text: "PREV COLLECTION"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -492,7 +492,7 @@ FocusScope {
                     text: "NEXT COLLECTION"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -511,7 +511,7 @@ FocusScope {
                     text: " BACK"
                     color: "black"
                     font.bold: true
-                    font.pixelSize: Math.min(bottomBar.height / 3, bottomBar.width / 40)
+                    font.pixelSize: Math.min(bottomBar.height / 4, bottomBar.width / 40)
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
