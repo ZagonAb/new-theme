@@ -1,4 +1,4 @@
-# PlayHub Theme:
+# PlayHub theme for Pegasus
 
 - Este tema es una interfaz sencilla y minimalista, diseñada para una experiencia de navegación fluida y sin distracciones visuales excesivas. La principal característica visual es la portada del juego (boxFront), que se muestra como el único recurso gráfico destacado. La navegación es intuitiva, permitiendo un fácil desplazamiento entre las colecciones y los juegos, con efectos de sonido sutiles que acompañan cada interacción: al moverse entre las colecciones, al seleccionar juegos, y al marcar un juego como favorito.
 
