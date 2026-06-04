@@ -6,9 +6,8 @@
 
 # Screenshots
 
-![screen1](https://github.com/ZagonAb/PlayHub/blob/071c210d59feac3e5b40274fa1648efa68239c19/.meta/screenshots/screen1.png)
-![screen2](https://github.com/ZagonAb/PlayHub/blob/071c210d59feac3e5b40274fa1648efa68239c19/.meta/screenshots/screen2.png)
-![screen3](https://github.com/ZagonAb/PlayHub/blob/071c210d59feac3e5b40274fa1648efa68239c19/.meta/screenshots/screen3.png)
+![screen1](https://github.com/ZagonAb/PlayHub/blob/bacc2fc6d313205f1b6a95fecd3a9c0d4714923a/.meta/screenshots/screen0.png)
+![screen2](https://github.com/ZagonAb/PlayHub/blob/bacc2fc6d313205f1b6a95fecd3a9c0d4714923a/.meta/screenshots/screen1.png)
 
  
 # License
